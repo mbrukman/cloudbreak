@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.sequenceiq.cloudbreak.domain.InstanceMetaData;
-import com.sequenceiq.cloudbreak.domain.Stack;
 
 public interface PluginManager {
 
@@ -15,5 +14,7 @@ public interface PluginManager {
 
     Set<String> triggerPlugins(Collection<InstanceMetaData> instanceMetaData, ConsulPluginEvent event);
 
-    void waitForEventFinish(Stack stack, Collection<InstanceMetaData> instanceMetaData, Set<String> eventIds);
+    void triggerConsulEvent(Long stackId, Collection<InstanceMetaData> instanceMetaDatas, ConsulPluginEvent event);
+
+    void waitForEventFinish(Long stackId, Collection<InstanceMetaData> instanceMetaData, Set<String> eventIds);
 }

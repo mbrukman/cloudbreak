@@ -25,6 +25,7 @@ import com.sequenceiq.cloudbreak.controller.BadRequestException;
 import com.sequenceiq.cloudbreak.controller.InternalServerException;
 import com.sequenceiq.cloudbreak.controller.NotFoundException;
 import com.sequenceiq.cloudbreak.controller.json.HostGroupAdjustmentJson;
+import com.sequenceiq.cloudbreak.converter.ClusterConverter;
 import com.sequenceiq.cloudbreak.domain.APIResourceType;
 import com.sequenceiq.cloudbreak.domain.Blueprint;
 import com.sequenceiq.cloudbreak.domain.CbUser;
@@ -83,6 +84,9 @@ public class AmbariClusterService implements ClusterService {
 
     @Autowired
     private HostFilterService hostFilterService;
+
+    @Autowired
+    private ClusterConverter clusterConverter;
 
     @Override
     public void create(CbUser user, Long stackId, Cluster cluster) {
@@ -202,6 +206,19 @@ public class AmbariClusterService implements ClusterService {
             reactor.notify(ReactorConfig.CLUSTER_STATUS_UPDATE_EVENT,
                     Event.wrap(new ClusterStatusUpdateRequest(stack.getId(), statusRequest)));
         }
+    }
+
+    @Override
+    public void recreate(Long stackId, Long blueprintId) {
+        Stack stack = stackRepository.findOne(stackId);
+        Cluster cluster = stack.getCluster();
+        MDCBuilder.buildMdcContext(cluster);
+        Blueprint blueprint = clusterConverter.blueprintValidation(blueprintId, stackId);
+        cluster.setBlueprint(blueprint);
+        LOGGER.info("Cluster requested [BlueprintId: {}]", cluster.getBlueprint().getId());
+        stack = stackUpdater.updateStackCluster(stack.getId(), cluster);
+        LOGGER.info("Publishing {} event", ReactorConfig.CLUSTER_REINSTALL_REQUESTED_EVENT);
+        reactor.notify(ReactorConfig.CLUSTER_REINSTALL_REQUESTED_EVENT, Event.wrap(stack));
     }
 
     private int getReplicationFactor(AmbariClient ambariClient, String hostGroup) {

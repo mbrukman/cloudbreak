@@ -184,4 +184,8 @@ public class Cluster implements ProvisionEntity {
     public void setHostMetadata(Set<HostMetadata> hostMetadata) {
         this.hostMetadata = hostMetadata;
     }
+
+    public boolean isStateFailed() {
+        return status.equals(Status.CREATE_FAILED);
+    }
 }

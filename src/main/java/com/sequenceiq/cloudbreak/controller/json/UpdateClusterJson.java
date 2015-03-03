@@ -8,6 +8,7 @@ public class UpdateClusterJson implements JsonEntity {
 
     private HostGroupAdjustmentJson hostGroupAdjustment;
     private StatusRequest status;
+    private Long blueprintId;
 
     public UpdateClusterJson() {
     }
@@ -26,5 +27,13 @@ public class UpdateClusterJson implements JsonEntity {
 
     public void setHostGroupAdjustment(HostGroupAdjustmentJson hostGroupAdjustment) {
         this.hostGroupAdjustment = hostGroupAdjustment;
+    }
+
+    public Long getBlueprintId() {
+        return blueprintId;
+    }
+
+    public void setBlueprintId(Long blueprintId) {
+        this.blueprintId = blueprintId;
     }
 }

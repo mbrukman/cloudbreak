@@ -10,6 +10,8 @@ import com.sequenceiq.cloudbreak.domain.Stack;
 import com.sequenceiq.cloudbreak.domain.Status;
 import com.sequenceiq.cloudbreak.logger.MDCBuilder;
 import com.sequenceiq.cloudbreak.service.cluster.flow.AmbariClusterConnector;
+import com.sequenceiq.cloudbreak.service.cluster.flow.ConsulPluginEvent;
+import com.sequenceiq.cloudbreak.service.cluster.flow.PluginManager;
 
 import reactor.event.Event;
 import reactor.function.Consumer;
@@ -21,6 +23,9 @@ public class ClusterRequestHandler implements Consumer<Event<Stack>> {
 
     @Autowired
     private AmbariClusterConnector ambariClusterConnector;
+
+    @Autowired
+    private PluginManager pluginManager;
 
     @Override
     public void accept(Event<Stack> event) {
@@ -39,6 +44,13 @@ public class ClusterRequestHandler implements Consumer<Event<Stack>> {
                 ambariClusterConnector.buildAmbariCluster(stack);
             } else {
                 LOGGER.info("Cluster install requested but the stack is not completed yet. Installation will start after the stack is ready.");
+            }
+        } else if (ReactorConfig.CLUSTER_REINSTALL_REQUESTED_EVENT.equals(eventKey)) {
+            if (stack.getStatus().equals(Status.AVAILABLE)) {
+                pluginManager.triggerConsulEvent(stack.getId(), stack.getAllInstanceMetaData(), ConsulPluginEvent.RESET_AMBARI_EVENT);
+                ambariClusterConnector.buildAmbariCluster(stack);
+            } else {
+                LOGGER.info("Cluster reinstall requested but the stack is not completed yet. Installation will start after the stack is ready.");
             }
         }
     }

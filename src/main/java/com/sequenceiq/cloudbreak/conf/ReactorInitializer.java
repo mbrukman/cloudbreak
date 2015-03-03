@@ -129,6 +129,7 @@ public class ReactorInitializer implements InitializingBean {
 
         reactor.on($(ReactorConfig.CLUSTER_REQUESTED_EVENT), clusterRequestHandler);
         reactor.on($(ReactorConfig.AMBARI_STARTED_EVENT), clusterRequestHandler);
+        reactor.on($(ReactorConfig.CLUSTER_REINSTALL_REQUESTED_EVENT), clusterRequestHandler);
         reactor.on($(ReactorConfig.CLUSTER_CREATE_SUCCESS_EVENT), clusterCreationSuccessHandler);
         reactor.on($(ReactorConfig.CLUSTER_CREATE_FAILED_EVENT), clusterCreationFailureHandler);
 

@@ -10,10 +10,12 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.amazonaws.services.cloudformation.model.StackResource;
 import com.ecwid.consul.v1.ConsulClient;
 import com.google.common.collect.Sets;
 import com.sequenceiq.cloudbreak.domain.InstanceMetaData;
 import com.sequenceiq.cloudbreak.domain.Stack;
+import com.sequenceiq.cloudbreak.repository.StackRepository;
 import com.sequenceiq.cloudbreak.service.PollingService;
 import com.sequenceiq.cloudbreak.service.cluster.PluginFailureException;
 import com.sequenceiq.cloudbreak.service.stack.flow.ConsulUtils;
@@ -29,6 +31,9 @@ public class ConsulPluginManager implements PluginManager {
 
     @Autowired
     private ConsulKVCheckerTask consulKVCheckerTask;
+
+    @Autowired
+    private StackRepository stackRepository;
 
     @Autowired
     private PollingService<ConsulKVCheckerContext> keyValuePollingService;
@@ -72,12 +77,18 @@ public class ConsulPluginManager implements PluginManager {
     }
 
     @Override
-    public void waitForEventFinish(Stack stack, Collection<InstanceMetaData> instanceMetaData, Set<String> eventIds) {
+    public void triggerConsulEvent(Long stackId, Collection<InstanceMetaData> instanceMetaData, ConsulPluginEvent event) {
+        Set<String> eventIds = triggerPlugins(instanceMetaData, event);
+        waitForEventFinish(stackId, instanceMetaData, eventIds);
+    }
+
+    @Override
+    public void waitForEventFinish(Long stackId, Collection<InstanceMetaData> instanceMetaData, Set<String> eventIds) {
         List<ConsulClient> clients = ConsulUtils.createClients(instanceMetaData);
         List<String> keys = generateKeys(instanceMetaData, eventIds);
         keyValuePollingService.pollWithTimeout(
                 consulKVCheckerTask,
-                new ConsulKVCheckerContext(stack, clients, keys, FINISH_SIGNAL, FAILED_SIGNAL),
+                new ConsulKVCheckerContext(stackRepository.findOneWithLists(stackId), clients, keys, FINISH_SIGNAL, FAILED_SIGNAL),
                 POLLING_INTERVAL, MAX_ATTEMPTS
         );
     }

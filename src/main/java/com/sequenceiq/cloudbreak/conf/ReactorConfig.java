@@ -24,6 +24,7 @@ public class ReactorConfig {
     public static final String DELETE_COMPLETE_EVENT = "DELETE_COMPLETE";
     public static final String CLUSTER_REQUESTED_EVENT = "CLUSTER_REQUESTED";
     public static final String AMBARI_STARTED_EVENT = "AMBARI_STARTED";
+    public static final String CLUSTER_REINSTALL_REQUESTED_EVENT = "CLUSTER_REINSTALL_REQUESTED_EVENT";
     public static final String CLUSTER_CREATE_SUCCESS_EVENT = "CLUSTER_CREATE_SUCCESS";
     public static final String CLUSTER_CREATE_FAILED_EVENT = "CLUSTER_CREATE_FAILED";
 

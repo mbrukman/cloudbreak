@@ -15,4 +15,6 @@ public interface ClusterService {
     void updateHosts(Long stackId, HostGroupAdjustmentJson hostGroupAdjustment);
 
     void updateStatus(Long stackId, StatusRequest statusRequest);
+
+    void recreate(Long stackId, Long blueprintId);
 }

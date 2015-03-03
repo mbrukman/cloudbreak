@@ -25,7 +25,7 @@ public class RecipeEngine {
         Set<String> plugins = stack.getCluster().getRecipe().getPlugins();
         pluginManager.prepareKeyValues(instances, properties);
         Set<String> installEventIds = pluginManager.installPlugins(instances, plugins);
-        pluginManager.waitForEventFinish(stack, instances, installEventIds);
+        pluginManager.waitForEventFinish(stack.getId(), instances, installEventIds);
     }
 
     public void executePreInstall(Stack stack) {
@@ -39,7 +39,7 @@ public class RecipeEngine {
     private void triggerAndWaitForPlugins(Stack stack, ConsulPluginEvent event) {
         Set<InstanceMetaData> instances = instanceMetadataRepository.findAllInStack(stack.getId());
         Set<String> triggerEventIds = pluginManager.triggerPlugins(instances, event);
-        pluginManager.waitForEventFinish(stack, instances, triggerEventIds);
+        pluginManager.waitForEventFinish(stack.getId(), instances, triggerEventIds);
     }
 
 }

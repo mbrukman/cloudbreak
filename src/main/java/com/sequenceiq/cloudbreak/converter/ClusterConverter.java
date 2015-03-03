@@ -49,14 +49,7 @@ public class ClusterConverter {
             throw new BadRequestException("Stack id can not be null");
         }
         Cluster cluster = new Cluster();
-        try {
-            Blueprint blueprint = blueprintRepository.findOne(clusterRequest.getBlueprintId());
-            cluster.setBlueprint(blueprint);
-            blueprintValidator.validateBlueprintForStack(blueprint, stackRepository.findOne(stackId).getInstanceGroups());
-        } catch (AccessDeniedException e) {
-            throw new AccessDeniedException(
-                    String.format("Access to blueprint '%s' is denied or blueprint doesn't exist.", clusterRequest.getBlueprintId()), e);
-        }
+        cluster.setBlueprint(blueprintValidation(clusterRequest.getBlueprintId(), stackId));
         if (clusterRequest.getRecipeId() != null) {
             try {
                 Recipe recipe = recipeRepository.findOne(clusterRequest.getRecipeId());
@@ -70,6 +63,17 @@ public class ClusterConverter {
         cluster.setDescription(clusterRequest.getDescription());
         cluster.setEmailNeeded(clusterRequest.getEmailNeeded());
         return cluster;
+    }
+
+    public Blueprint blueprintValidation(Long blueprintId, Long stackId) {
+        try {
+            Blueprint blueprint = blueprintRepository.findOne(blueprintId);
+            blueprintValidator.validateBlueprintForStack(blueprint, stackRepository.findOne(stackId).getInstanceGroups());
+            return blueprint;
+        } catch (AccessDeniedException e) {
+            throw new AccessDeniedException(
+                    String.format("Access to blueprint '%s' is denied or blueprint doesn't exist.", blueprintId), e);
+        }
     }
 
     public ClusterResponse convert(Cluster cluster, String clusterJson) {
