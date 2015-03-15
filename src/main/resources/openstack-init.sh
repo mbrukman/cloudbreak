@@ -150,7 +150,7 @@ set_public_host_script() {
 }
 
 format_disks() {
-  /usr/local/disk_mount.sh
+  mkdir /mnt/fs1
 }
 
 main() {
