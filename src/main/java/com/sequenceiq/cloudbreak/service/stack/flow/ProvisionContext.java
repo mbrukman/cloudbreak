@@ -10,10 +10,7 @@ import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.AsyncTaskExecutor;
-import org.springframework.stereotype.Service;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -42,44 +39,45 @@ import com.sequenceiq.cloudbreak.service.stack.resource.ResourceBuilderInit;
 import reactor.core.Reactor;
 import reactor.event.Event;
 
-@Service
 public class ProvisionContext {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProvisionContext.class);
 
-    @Autowired
-    private StackRepository stackRepository;
+    private final StackRepository stackRepository;
+    private final RetryingStackUpdater stackUpdater;
+    private final Map<CloudPlatform, CloudPlatformConnector> cloudPlatformConnectors;
+    private final Reactor reactor;
+    private final UserDataBuilder userDataBuilder;
+    private final Map<CloudPlatform, List<ResourceBuilder>> instanceResourceBuilders;
+    private final Map<CloudPlatform, List<ResourceBuilder>> networkResourceBuilders;
+    private final AsyncTaskExecutor resourceBuilderExecutor;
+    private final Map<CloudPlatform, ResourceBuilderInit> resourceBuilderInits;
+    private final ProvisionUtil provisionUtil;
+    private final FailureHandlerService stackFailureHandlerService;
 
-    @Autowired
-    private RetryingStackUpdater stackUpdater;
-
-    @javax.annotation.Resource
-    private Map<CloudPlatform, CloudPlatformConnector> cloudPlatformConnectors;
-
-    @Autowired
-    private Reactor reactor;
-
-    @Autowired
-    private UserDataBuilder userDataBuilder;
-
-    @javax.annotation.Resource
-    private Map<CloudPlatform, List<ResourceBuilder>> instanceResourceBuilders;
-
-    @javax.annotation.Resource
-    private Map<CloudPlatform, List<ResourceBuilder>> networkResourceBuilders;
-
-    @Autowired
-    private AsyncTaskExecutor resourceBuilderExecutor;
-
-    @javax.annotation.Resource
-    private Map<CloudPlatform, ResourceBuilderInit> resourceBuilderInits;
-
-    @Autowired
-    private ProvisionUtil provisionUtil;
-
-    @Autowired
-    @Qualifier("stackFailureHandlerService")
-    private FailureHandlerService stackFailureHandlerService;
+    public ProvisionContext(
+            StackRepository stackRepository,
+            RetryingStackUpdater stackUpdater,
+            Map<CloudPlatform, CloudPlatformConnector> cloudPlatformConnectors,
+            Reactor reactor, UserDataBuilder userDataBuilder,
+            Map<CloudPlatform, List<ResourceBuilder>> instanceResourceBuilders,
+            Map<CloudPlatform, List<ResourceBuilder>> networkResourceBuilders,
+            AsyncTaskExecutor resourceBuilderExecutor,
+            Map<CloudPlatform, ResourceBuilderInit> resourceBuilderInits,
+            ProvisionUtil provisionUtil,
+            FailureHandlerService stackFailureHandlerService) {
+        this.stackRepository = stackRepository;
+        this.stackUpdater = stackUpdater;
+        this.cloudPlatformConnectors = cloudPlatformConnectors;
+        this.reactor = reactor;
+        this.userDataBuilder = userDataBuilder;
+        this.instanceResourceBuilders = instanceResourceBuilders;
+        this.networkResourceBuilders = networkResourceBuilders;
+        this.resourceBuilderExecutor = resourceBuilderExecutor;
+        this.resourceBuilderInits = resourceBuilderInits;
+        this.provisionUtil = provisionUtil;
+        this.stackFailureHandlerService = stackFailureHandlerService;
+    }
 
     public void buildStack(final CloudPlatform cloudPlatform, Long stackId, Map<String, Object> setupProperties, Map<String, String> userDataParams) {
         Stack stack = stackRepository.findOneWithLists(stackId);
@@ -163,4 +161,93 @@ public class ProvisionContext {
         return byLengthOrdering.sortedCopy(instanceGroupSet);
     }
 
+
+    public static class ProvisionContextBuilder {
+        private StackRepository stackRepository;
+        private RetryingStackUpdater stackUpdater;
+        private Map<CloudPlatform, CloudPlatformConnector> cloudPlatformConnectors;
+        private Reactor reactor;
+        private UserDataBuilder userDataBuilder;
+        private Map<CloudPlatform, List<ResourceBuilder>> instanceResourceBuilders;
+        private Map<CloudPlatform, List<ResourceBuilder>> networkResourceBuilders;
+        private AsyncTaskExecutor resourceBuilderExecutor;
+        private Map<CloudPlatform, ResourceBuilderInit> resourceBuilderInits;
+        private ProvisionUtil provisionUtil;
+        private FailureHandlerService stackFailureHandlerService;
+
+        public static ProvisionContextBuilder builder() {
+            return new ProvisionContextBuilder();
+        }
+
+        public ProvisionContextBuilder withStackRepository(StackRepository stackRepository) {
+            this.stackRepository = stackRepository;
+            return this;
+        }
+
+        public ProvisionContextBuilder withStackUpdater(RetryingStackUpdater stackUpdater) {
+            this.stackUpdater = stackUpdater;
+            return this;
+        }
+
+        public ProvisionContextBuilder withCloudPlatformConnectors(Map<CloudPlatform, CloudPlatformConnector> cloudPlatformConnectors) {
+            this.cloudPlatformConnectors = cloudPlatformConnectors;
+            return this;
+        }
+
+        public ProvisionContextBuilder withReactor(Reactor reactor) {
+            this.reactor = reactor;
+            return this;
+        }
+
+        public ProvisionContextBuilder withUserDataBuilder(UserDataBuilder userDataBuilder) {
+            this.userDataBuilder = userDataBuilder;
+            return this;
+        }
+
+        public ProvisionContextBuilder withInstanceResourceBuilders(Map<CloudPlatform, List<ResourceBuilder>> instanceResourceBuilders) {
+            this.instanceResourceBuilders = instanceResourceBuilders;
+            return this;
+        }
+
+        public ProvisionContextBuilder withNetworkResourceBuilders(Map<CloudPlatform, List<ResourceBuilder>> networkResourceBuilders) {
+            this.networkResourceBuilders = networkResourceBuilders;
+            return this;
+        }
+
+        public ProvisionContextBuilder withResourceBuilderExecutor(AsyncTaskExecutor resourceBuilderExecutor) {
+            this.resourceBuilderExecutor = resourceBuilderExecutor;
+            return this;
+        }
+
+        public ProvisionContextBuilder withResourceBuilderInits(Map<CloudPlatform, ResourceBuilderInit> resourceBuilderInits) {
+            this.resourceBuilderInits = resourceBuilderInits;
+            return this;
+        }
+
+        public ProvisionContextBuilder withProvisionUtil(ProvisionUtil provisionUtil) {
+            this.provisionUtil = provisionUtil;
+            return this;
+        }
+
+        public ProvisionContextBuilder withStackFailureHandlerService(FailureHandlerService stackFailureHandlerService) {
+            this.stackFailureHandlerService = stackFailureHandlerService;
+            return this;
+        }
+
+        public ProvisionContext build() {
+            return new ProvisionContext(
+                    stackRepository,
+                    stackUpdater,
+                    cloudPlatformConnectors,
+                    reactor,
+                    userDataBuilder,
+                    instanceResourceBuilders,
+                    networkResourceBuilders,
+                    resourceBuilderExecutor,
+                    resourceBuilderInits,
+                    provisionUtil,
+                    stackFailureHandlerService
+            );
+        }
+    }
 }

@@ -102,7 +102,7 @@ public class ProvisionContextTest {
 
     @Before
     public void setUp() {
-        underTest = new ProvisionContext();
+        //underTest = new ProvisionContext();
         MockitoAnnotations.initMocks(this);
         stack = ServiceTestUtils.createStack(CloudPlatform.GCC);
 
