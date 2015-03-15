@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.openstack4j.api.OSClient;
+import org.openstack4j.model.compute.Address;
 import org.openstack4j.model.compute.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,11 +48,21 @@ public class OpenStackMetadataSetup implements MetadataSetup {
         List<Map<String, Object>> outputs = heatStack.getOutputs();
         for (Map<String, Object> map : outputs) {
             String instanceId = (String) map.get("output_value");
+
             Server server = osClient.compute().servers().get(instanceId);
+
+            // Getting a private IP for any network
+            String privateIp = null;
+            Map<String, List<? extends Address>>  adrMap = server.getAddresses().getAddresses();
+            for (List<? extends Address> adrList : adrMap.values()) {
+                //just pick a private IP don't care which one if it has multiple IPs
+                privateIp = adrList.get(0).getAddr();
+            }
+
             instancesCoreMetadata.add(new CoreInstanceMetaData(
                     instanceId,
-                    server.getAddresses().getAddresses("app_network").get(0).getAddr(),
-                    server.getAddresses().getAddresses("app_network").get(1).getAddr(),
+                    privateIp,
+                    privateIp,
                     server.getOsExtendedVolumesAttached().size(),
                     server.getName(),
                     stack.getInstanceGroupByInstanceGroupName(server.getMetadata().get(HeatTemplateBuilder.CB_INSTANCE_GROUP_NAME))
