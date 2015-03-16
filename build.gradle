@@ -99,6 +99,7 @@ sonarRunner {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven { url "http://maven.sequenceiq.com/snapshots" }
     maven { url "http://maven.sequenceiq.com/release" }
@@ -148,6 +149,7 @@ dependencies {
     compile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.47'
     compile 'org.jasypt:jasypt:1.9.2'
     compile 'com.google.guava:guava:16.0.1'
+    compile 'com.github.docker-java:docker-java:1.0.1-SNAPSHOT'
     checkstyle('com.puppycrawl.tools:checkstyle:5.7') {
         exclude group: 'com.google.guava'
     }
