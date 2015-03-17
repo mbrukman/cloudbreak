@@ -46,14 +46,17 @@ public class OpenStackMetadataSetup implements MetadataSetup {
         Set<CoreInstanceMetaData> instancesCoreMetadata = new HashSet<>();
         org.openstack4j.model.heat.Stack heatStack = osClient.heat().stacks().getDetails(stack.getName(), heatStackId);
         List<Map<String, Object>> outputs = heatStack.getOutputs();
+        LOGGER.info("Returned output value: {}", outputs);
         for (Map<String, Object> map : outputs) {
-            String instanceId = (String) map.get("output_value");
+            Object outpValue = map.get("output_value");
+            LOGGER.info("Returned instnace output value: {}", outpValue);
+            String instanceId = (String) ((List) outpValue).get(0);
 
             Server server = osClient.compute().servers().get(instanceId);
 
             // Getting a private IP for any network
             String privateIp = null;
-            Map<String, List<? extends Address>>  adrMap = server.getAddresses().getAddresses();
+            Map<String, List<? extends Address>> adrMap = server.getAddresses().getAddresses();
             for (List<? extends Address> adrList : adrMap.values()) {
                 //just pick a private IP don't care which one if it has multiple IPs
                 privateIp = adrList.get(0).getAddr();
