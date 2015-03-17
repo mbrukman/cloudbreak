@@ -44,33 +44,36 @@ public class OpenStackMetadataSetup implements MetadataSetup {
         Resource heatResource = stack.getResourceByType(ResourceType.HEAT_STACK);
         String heatStackId = heatResource.getResourceName();
         Set<CoreInstanceMetaData> instancesCoreMetadata = new HashSet<>();
-        org.openstack4j.model.heat.Stack heatStack = osClient.heat().stacks().getDetails(stack.getName(), heatStackId);
-        List<Map<String, Object>> outputs = heatStack.getOutputs();
-        LOGGER.info("Returned output value: {}", outputs);
-        for (Map<String, Object> map : outputs) {
-            Object outpValue = map.get("output_value");
-            LOGGER.info("Returned instnace output value: {}", outpValue);
-            String instanceId = (String) ((List) outpValue).get(0);
 
-            Server server = osClient.compute().servers().get(instanceId);
+        List<? extends org.openstack4j.model.heat.Resource> resources = osClient.heat().resources().list(stack.getName(), heatStackId);
+        for (org.openstack4j.model.heat.Resource resource : resources) {
+            LOGGER.info("Resource: {}", resource);
+            LOGGER.info("Type: {}", resource.getType());
+            String resourceId = resource.getPhysicalResourceId();
+            LOGGER.info("ResourceID: {}", resourceId);
+            if (resource.getType().contains("Server") || resource.getType().contains("server")) {
+                Server server = osClient.compute().servers().get(resourceId);
 
-            // Getting a private IP for any network
-            String privateIp = null;
-            Map<String, List<? extends Address>> adrMap = server.getAddresses().getAddresses();
-            for (List<? extends Address> adrList : adrMap.values()) {
-                //just pick a private IP don't care which one if it has multiple IPs
-                privateIp = adrList.get(0).getAddr();
+                // Getting a private IP for any network
+                String privateIp = null;
+                Map<String, List<? extends Address>> adrMap = server.getAddresses().getAddresses();
+                for (List<? extends Address> adrList : adrMap.values()) {
+                    //just pick a private IP don't care which one if it has multiple IPs
+                    privateIp = adrList.get(0).getAddr();
+                }
+
+                instancesCoreMetadata.add(new CoreInstanceMetaData(
+                        resourceId,
+                        privateIp,
+                        privateIp,
+                        server.getOsExtendedVolumesAttached().size(),
+                        server.getName(),
+                        stack.getInstanceGroupByInstanceGroupName(server.getMetadata().get(HeatTemplateBuilder.CB_INSTANCE_GROUP_NAME))
+                ));
+
             }
-
-            instancesCoreMetadata.add(new CoreInstanceMetaData(
-                    instanceId,
-                    privateIp,
-                    privateIp,
-                    server.getOsExtendedVolumesAttached().size(),
-                    server.getName(),
-                    stack.getInstanceGroupByInstanceGroupName(server.getMetadata().get(HeatTemplateBuilder.CB_INSTANCE_GROUP_NAME))
-            ));
         }
+
         LOGGER.info("Publishing {} event [StackId: '{}']", ReactorConfig.METADATA_SETUP_COMPLETE_EVENT, stack.getId());
         reactor.notify(ReactorConfig.METADATA_SETUP_COMPLETE_EVENT,
                 Event.wrap(new MetadataSetupComplete(CloudPlatform.OPENSTACK, stack.getId(), instancesCoreMetadata)));
