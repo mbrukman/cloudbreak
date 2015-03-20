@@ -1,7 +1,7 @@
 buildscript {
     repositories {
-        mavenCentral()
-        jcenter()
+        maven  { url "http://repo1.maven.org/maven2" }
+        jcenter { url "http://jcenter.bintray.com/" }
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:1.0.2.RELEASE"
@@ -23,6 +23,7 @@ apply plugin:'license-report'
 
 sourceCompatibility = 1.7
 group = 'com.sequenceiq'
+mainClassName = 'com.sequenceiq.cloudbreak.CloudbreakApplication'
 
 allprojects {
     apply from: "$rootDir/gradle/versioning.gradle"
@@ -123,7 +124,7 @@ sonarRunner {
 }
 
 repositories {
-    mavenCentral()
+    maven  { url "http://repo1.maven.org/maven2" }
     maven { url "http://maven.sequenceiq.com/snapshots" }
     maven { url "http://maven.sequenceiq.com/release" }
     maven { url "http://maven.sequenceiq.com/releases" }
