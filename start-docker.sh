@@ -5,7 +5,7 @@ build-cloudbreak() {
 }
 
 run-cloudbreak() {
-    if [ "$DEBUG" ]; then
+    if [ "$CB_DEBUG" ]; then
         params="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
     fi
     java $params -jar build/libs/cloudbreak-*.jar
