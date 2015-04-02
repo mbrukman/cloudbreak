@@ -15,6 +15,7 @@ public class ClusterResponse {
     private Long blueprintId;
     private String description;
     private String statusReason;
+    private boolean secure;
     private Set<HostGroupJson> hostGroups;
 
     public String getDescription() {
@@ -88,5 +89,13 @@ public class ClusterResponse {
 
     public void setHostGroups(Set<HostGroupJson> hostGroups) {
         this.hostGroups = hostGroups;
+    }
+
+    public boolean isSecure() {
+        return secure;
+    }
+
+    public void setSecure(boolean secure) {
+        this.secure = secure;
     }
 }

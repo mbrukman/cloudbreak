@@ -23,6 +23,7 @@ public class ClusterRequest {
     @NotNull
     private Set<HostGroupJson> hostGroups;
     private Boolean emailNeeded = Boolean.FALSE;
+    private Boolean enableSecurity = Boolean.FALSE;
 
     public String getDescription() {
         return description;
@@ -62,5 +63,13 @@ public class ClusterRequest {
 
     public void setEmailNeeded(Boolean emailNeeded) {
         this.emailNeeded = emailNeeded;
+    }
+
+    public Boolean getEnableSecurity() {
+        return enableSecurity;
+    }
+
+    public void setEnableSecurity(Boolean enableSecurity) {
+        this.enableSecurity = enableSecurity;
     }
 }
