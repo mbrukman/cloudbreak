@@ -148,6 +148,7 @@ dependencies {
     compile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.47'
     compile 'org.jasypt:jasypt:1.9.2'
     compile 'com.google.guava:guava:16.0.1'
+    compile group: 'com.github.docker-java', name: 'docker-java', version: '1.0.0'
     checkstyle('com.puppycrawl.tools:checkstyle:5.7') {
         exclude group: 'com.google.guava'
     }
@@ -159,7 +160,6 @@ dependencies {
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: '1.1.8.RELEASE'
     testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '2.3.4'
     testCompile group: 'com.jayway.restassured', name: 'json-path', version: '2.3.4'
-
     deployerJars 'org.springframework.build.aws:org.springframework.build.aws.maven:3.0.0.RELEASE'
 }
 

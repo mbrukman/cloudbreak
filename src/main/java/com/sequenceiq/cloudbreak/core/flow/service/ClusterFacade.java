@@ -10,6 +10,8 @@ public interface ClusterFacade {
 
     FlowContext allocateAmbariRoles(FlowContext context) throws Exception;
 
+    FlowContext finalizeMetadata(FlowContext context) throws Exception;
+
     FlowContext startAmbari(FlowContext context) throws Exception;
 
     FlowContext buildAmbariCluster(FlowContext context) throws Exception;
@@ -31,4 +33,10 @@ public interface ClusterFacade {
     FlowContext handleScalingFailure(FlowContext context) throws CloudbreakException;
 
     FlowContext resetAmbariCluster(FlowContext context) throws CloudbreakException;
+
+    FlowContext upscaleClusterPrepare(FlowContext context) throws CloudbreakException;
+
+    FlowContext upscaleClusterNodes(FlowContext context) throws CloudbreakException;
+
+    FlowContext handleClusterSetup(FlowContext context) throws CloudbreakException;
 }

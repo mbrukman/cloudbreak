@@ -11,21 +11,21 @@ import com.sequenceiq.cloudbreak.service.cluster.event.UpdateAmbariHostsRequest;
 public class ClusterScalingContext extends DefaultFlowContext implements FlowContext {
 
     private HostGroupAdjustmentJson hostGroupAdjustment;
-    private List<HostMetadata> decommissionCandidates;
+    private List<HostMetadata> candidates;
     private ScalingType scalingType;
 
     public ClusterScalingContext(Long stackId, CloudPlatform cloudPlatform, HostGroupAdjustmentJson hostGroupAdjustment,
             List<HostMetadata> candidates, ScalingType scalingType) {
         super(stackId, cloudPlatform);
         this.hostGroupAdjustment = hostGroupAdjustment;
-        this.decommissionCandidates = candidates;
+        this.candidates = candidates;
         this.scalingType = scalingType;
     }
 
     public ClusterScalingContext(UpdateAmbariHostsRequest updateAmbariHostsRequest) {
         super(updateAmbariHostsRequest.getStackId(), updateAmbariHostsRequest.getCloudPlatform());
         this.hostGroupAdjustment = updateAmbariHostsRequest.getHostGroupAdjustment();
-        this.decommissionCandidates = updateAmbariHostsRequest.getDecommissionCandidates();
+        this.candidates = updateAmbariHostsRequest.getDecommissionCandidates();
         this.scalingType = updateAmbariHostsRequest.getScalingType();
     }
 
@@ -33,8 +33,8 @@ public class ClusterScalingContext extends DefaultFlowContext implements FlowCon
         return hostGroupAdjustment;
     }
 
-    public List<HostMetadata> getDecommissionCandidates() {
-        return decommissionCandidates;
+    public List<HostMetadata> getCandidates() {
+        return candidates;
     }
 
     public ScalingType getScalingType() {

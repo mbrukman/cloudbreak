@@ -131,7 +131,7 @@ public class ReactorFlowManager implements FlowManager {
     public void triggerClusterUpscale(Object object) {
         UpdateAmbariHostsRequest request = (UpdateAmbariHostsRequest) object;
         ClusterScalingContext context = new ClusterScalingContext(request);
-        reactor.notify(FlowPhases.CLUSTER_UPSCALE.name(), eventFactory.createEvent(context, FlowPhases.CLUSTER_UPSCALE.name()));
+        reactor.notify(FlowPhases.CLUSTER_PREPARE_UPSCALE.name(), eventFactory.createEvent(context, FlowPhases.CLUSTER_PREPARE_UPSCALE.name()));
     }
 
     @Override

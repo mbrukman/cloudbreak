@@ -1,5 +1,7 @@
 package com.sequenceiq.cloudbreak.core.flow.service;
 
+import static com.sequenceiq.cloudbreak.domain.InstanceGroupType.HOSTGROUP;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import com.sequenceiq.cloudbreak.controller.json.HostGroupAdjustmentJson;
 import com.sequenceiq.cloudbreak.core.CloudbreakException;
+import com.sequenceiq.cloudbreak.core.flow.ClusterSetupRunner;
 import com.sequenceiq.cloudbreak.core.flow.StackStartService;
 import com.sequenceiq.cloudbreak.core.flow.StackStopService;
 import com.sequenceiq.cloudbreak.core.flow.context.ClusterScalingContext;
@@ -238,7 +241,7 @@ public class SimpleStackFacade implements StackFacade {
         Stack stack = stackRepository.findOneWithLists(stackId);
         MDCBuilder.buildMdcContext(stack);
         String hostGroupUserData = userDataBuilder
-                .buildUserData(stack.cloudPlatform(), stack.getHash(), stack.getConsulServers(), new HashMap<String, String>(), InstanceGroupType.HOSTGROUP);
+                .buildUserData(stack.cloudPlatform(), stack.getHash(), stack.getConsulServers(), new HashMap<String, String>(), HOSTGROUP);
         String gateWayUserData = userDataBuilder
                 .buildUserData(stack.cloudPlatform(), stack.getHash(), stack.getConsulServers(), new HashMap<String, String>(), InstanceGroupType.GATEWAY);
         try {

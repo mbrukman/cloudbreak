@@ -61,7 +61,7 @@ public class AmbariRoleAllocatorTest {
         given(stackUpdater.updateStackMetaData(anyLong(), anySet(), anyString())).willReturn(stack);
         given(stackUpdater.updateMetadataReady(1L, true)).willReturn(updatedStack());
         // WHEN
-        underTest.allocateRoles(1L, coreInstanceMetaData);
+        underTest.allocateRoles(1L);
         // THEN
         verify(reactor, times(1)).notify(any(ReactorConfig.class), any(Event.class));
     }
@@ -72,7 +72,7 @@ public class AmbariRoleAllocatorTest {
         stack.setMetadataReady(true);
         given(stackRepository.findById(1L)).willReturn(stack);
         // WHEN
-        underTest.allocateRoles(1L, coreInstanceMetaData);
+        underTest.allocateRoles(1L);
         // THEN
         verify(reactor, times(0)).notify(any(ReactorConfig.class), any(Event.class));
         verify(stackUpdater, times(0)).updateMetadataReady(anyLong(), anyBoolean());
@@ -85,7 +85,7 @@ public class AmbariRoleAllocatorTest {
         given(stackRepository.findById(1L)).willReturn(stack);
         given(stackRepository.findOneWithLists(1L)).willReturn(stack);
         // WHEN
-        underTest.allocateRoles(1L, coreInstanceMetaData);
+        underTest.allocateRoles(1L);
         // THEN
         verify(reactor, times(1)).notify(any(ReactorConfig.class), any(Event.class));
         verify(stackUpdater, times(0)).updateMetadataReady(anyLong(), anyBoolean());
@@ -97,7 +97,7 @@ public class AmbariRoleAllocatorTest {
         given(stackRepository.findById(1L)).willThrow(new IllegalStateException());
         given(stackRepository.findOneWithLists(1L)).willReturn(stack);
         // WHEN
-        underTest.allocateRoles(1L, coreInstanceMetaData);
+        underTest.allocateRoles(1L);
         // THEN
         verify(reactor, times(1)).notify(any(ReactorConfig.class), any(Event.class));
         verify(stackUpdater, times(0)).updateMetadataReady(anyLong(), anyBoolean());
