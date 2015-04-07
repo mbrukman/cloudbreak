@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
@@ -18,13 +17,11 @@ import org.testng.annotations.Test;
 import com.jayway.restassured.response.Response;
 import com.sequenceiq.ambari.client.AmbariClient;
 import com.sequenceiq.it.IntegrationTestContext;
-import com.sequenceiq.it.config.IntegrationTestConfiguration;
 import com.sequenceiq.it.util.FreeMarkerUtil;
 import com.sequenceiq.it.util.RestUtil;
 
 import freemarker.template.Template;
 
-@ContextConfiguration(classes = IntegrationTestConfiguration.class)
 public class ClusterCreationTest extends AbstractCloudbreakIntegrationTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClusterCreationTest.class);
 
@@ -73,7 +70,7 @@ public class ClusterCreationTest extends AbstractCloudbreakIntegrationTest {
 
         AmbariClient ambariClient = new AmbariClient(ambariIp);
         Assert.assertEquals("RUNNING", ambariClient.healthCheck(), "The Ambari server is not running!");
-        Assert.assertEquals(ambariClient.getClusterHosts().size(), getNodeCount(stackResponse),
+        Assert.assertEquals(ambariClient.getClusterHosts().size(), getNodeCount(stackResponse) - 1,
                 "The number of cluster nodes in the stack differs from the number of nodes registered in ambari");
     }
 

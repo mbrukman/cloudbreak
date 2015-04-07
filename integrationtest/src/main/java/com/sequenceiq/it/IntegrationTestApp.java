@@ -19,7 +19,6 @@ public class IntegrationTestApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        System.setProperty("spring.freemarker.checkTemplateLocation", "false");
         testng.setSuiteThreadPoolSize(suiteThreadPoolSize);
         testng.setTestSuites(Arrays.asList(args));
         testng.run();

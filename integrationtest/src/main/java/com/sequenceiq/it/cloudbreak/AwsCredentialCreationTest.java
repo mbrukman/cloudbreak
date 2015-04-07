@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -14,14 +13,12 @@ import org.testng.annotations.Test;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.sequenceiq.it.IntegrationTestContext;
-import com.sequenceiq.it.config.IntegrationTestConfiguration;
 import com.sequenceiq.it.util.FreeMarkerUtil;
 import com.sequenceiq.it.util.ResourceUtil;
 import com.sequenceiq.it.util.RestUtil;
 
 import freemarker.template.Template;
 
-@ContextConfiguration(classes = IntegrationTestConfiguration.class)
 public class AwsCredentialCreationTest extends AbstractCloudbreakIntegrationTest {
     private static final String URL_PATH = "/user/credentials";
     private static final String CREDENTIAL_NAME = "it-aws-cred";

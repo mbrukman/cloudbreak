@@ -3,7 +3,6 @@ package com.sequenceiq.it.config;
 import java.io.IOException;
 
 import org.springframework.beans.factory.config.PropertyResourceConfigurer;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +16,6 @@ import freemarker.template.TemplateException;
 
 @Configuration
 @ComponentScan("com.sequenceiq.it")
-@ConfigurationProperties
 public class IntegrationTestConfiguration {
     @Bean
     public static PropertyResourceConfigurer propertySourcesPlaceholderConfigurer() {

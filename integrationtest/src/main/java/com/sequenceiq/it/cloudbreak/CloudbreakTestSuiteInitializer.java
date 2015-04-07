@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.util.StringUtils;
@@ -21,10 +22,12 @@ import com.sequenceiq.it.SuiteContext;
 import com.sequenceiq.it.config.IntegrationTestConfiguration;
 import com.sequenceiq.it.util.RestUtil;
 
-@ContextConfiguration(classes = IntegrationTestConfiguration.class)
+@ContextConfiguration(classes = IntegrationTestConfiguration.class, initializers = ConfigFileApplicationContextInitializer.class)
 public class CloudbreakTestSuiteInitializer extends AbstractTestNGSpringContextTests {
     @Value("${integrationtest.cloudbreak.server:}")
     private String defaultCloudbreakServer;
+    @Value("${integrationtest.gcpCredentialName:}")
+    private String gcpCredentialName;
 
     @Autowired
     private TemplateAdditionHelper templateAdditionHelper;
@@ -42,13 +45,16 @@ public class CloudbreakTestSuiteInitializer extends AbstractTestNGSpringContextT
     }
 
     @BeforeSuite(dependsOnMethods = "initContext")
-    @Parameters({ "cloudbreakServer", "credentialName", "instanceGroups", "hostGroups", "blueprintName", "stackName" })
-    public void initCloudbreakSuite(@Optional("") String cloudbreakServer, @Optional("") String credentialName,
+    @Parameters({ "cloudbreakServer", "cloudProvider", "credentialName", "instanceGroups", "hostGroups", "blueprintName", "stackName" })
+    public void initCloudbreakSuite(@Optional("") String cloudbreakServer, @Optional("") String cloudProvider, @Optional("") String credentialName,
             @Optional("") String instanceGroups, @Optional("") String hostGroups, @Optional("") String blueprintName, @Optional("") String stackName) {
         cloudbreakServer = StringUtils.hasLength(cloudbreakServer) ? cloudbreakServer : defaultCloudbreakServer;
         itContext.putContextParam(CloudbreakITContextConstants.CLOUDBREAK_SERVER, cloudbreakServer);
         putResourceToContextIfExist(CloudbreakITContextConstants.BLUEPRINT_ID, "/account/blueprints/{name}", blueprintName);
         putResourceToContextIfExist(CloudbreakITContextConstants.CREDENTIAL_ID, "/account/credentials/{name}", credentialName);
+        if (credentialName.isEmpty() && !cloudProvider.isEmpty()) {
+            putResourceToContextIfExist(CloudbreakITContextConstants.CREDENTIAL_ID, "/account/credentials/{name}", gcpCredentialName);
+        }
         putResourceToContextIfExist(CloudbreakITContextConstants.STACK_ID, "/account/stacks/{name}", stackName);
         if (StringUtils.hasLength(instanceGroups)) {
             List<String[]> instanceGroupStrings = templateAdditionHelper.parseCommaSeparatedRows(instanceGroups);
@@ -63,8 +69,9 @@ public class CloudbreakTestSuiteInitializer extends AbstractTestNGSpringContextT
     private List<InstanceGroup> createInstanceGroups(List<String[]> instanceGroupStrings) {
         List<InstanceGroup> instanceGroups = new ArrayList<>();
         for (String[] instanceGroupStr : instanceGroupStrings) {
+            String type = instanceGroupStr.length == 4 ? instanceGroupStr[3] : "HOSTGROUP";
             instanceGroups.add(new InstanceGroup(getResourceIdByName("/account/templates/{name}", instanceGroupStr[0]), instanceGroupStr[1],
-                    Integer.parseInt(instanceGroupStr[2])));
+                    Integer.parseInt(instanceGroupStr[2]), type));
         }
         return instanceGroups;
     }

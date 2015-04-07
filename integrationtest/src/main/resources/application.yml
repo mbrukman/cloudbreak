@@ -1,0 +1,9 @@
+spring:
+    freemarker:
+        checkTemplateLocation: false
+
+integrationtest:
+    gcpCredentialName: it-gcp-credential
+    azureCredentialName: itazurecredential
+    awsCredentialName: it-aws-credential
+    openstackCredentialName: it-openstack-credential

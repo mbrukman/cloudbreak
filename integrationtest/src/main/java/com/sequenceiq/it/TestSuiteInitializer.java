@@ -2,6 +2,7 @@ package com.sequenceiq.it;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -17,7 +18,7 @@ import com.jayway.restassured.response.Response;
 import com.sequenceiq.it.config.IntegrationTestConfiguration;
 import com.sequenceiq.it.util.RestUtil;
 
-@ContextConfiguration(classes = IntegrationTestConfiguration.class)
+@ContextConfiguration(classes = IntegrationTestConfiguration.class, initializers = ConfigFileApplicationContextInitializer.class)
 public class TestSuiteInitializer extends AbstractTestNGSpringContextTests {
     @Value("${integrationtest.uaa.server:}")
     private String defaultUaaServer;
@@ -33,6 +34,9 @@ public class TestSuiteInitializer extends AbstractTestNGSpringContextTests {
 
     @Value("${integrationtest.keystore.password:}")
     private String keystorePassword;
+
+    @Value("${integrationtest.gcpCredentialName:}")
+    private String gcpCredentialName;
 
     @Autowired
     private SuiteContext suiteContext;
