@@ -1,22 +1,22 @@
 package com.sequenceiq.it.cloudbreak.config;
 
+import java.util.Map;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "integrationtest")
 public class ITProps {
-    private String integrationTestName;
-    private String name;
-    private String credentialGcpName;
+    private Map<String, String> credentialNames;
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCredentialNames(Map<String, String> credentialNames) {
+        this.credentialNames = credentialNames;
     }
 
-    public void setCredentialGcpName(String credentialGcpName) {
-        this.credentialGcpName = credentialGcpName;
+    public Map<String, String> getCredentialNames() {
+        return credentialNames;
     }
 
-    public String getCredentialGcpName() {
-        return credentialGcpName;
+    public String getCredentialName(String cloudProvider) {
+        return credentialNames.get(cloudProvider);
     }
 }

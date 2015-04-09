@@ -6,12 +6,15 @@ import java.util.List;
 import com.sequenceiq.it.IntegrationTestContext;
 
 public class TemplateAdditionHelper {
+
+    public static final int WITH_TYPE_LENGTH = 3;
+
     public List<TemplateAddition> parseTemplateAdditions(String additionString) {
         List<TemplateAddition> additions = new ArrayList<>();
         String[] additionsArray = additionString.split(";");
         for (String additionsString : additionsArray) {
             String[] additionArray = additionsString.split(",");
-            String type = additionArray.length == 3 ? additionArray[2] : "HOSTGROUP";
+            String type = additionArray.length == WITH_TYPE_LENGTH ? additionArray[WITH_TYPE_LENGTH - 1] : "HOSTGROUP";
             additions.add(new TemplateAddition(additionArray[0], Integer.valueOf(additionArray[1]), type));
         }
         return additions;

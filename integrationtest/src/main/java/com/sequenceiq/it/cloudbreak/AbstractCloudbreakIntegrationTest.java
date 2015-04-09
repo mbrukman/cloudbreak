@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
@@ -14,8 +13,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.response.Response;
+import com.sequenceiq.cloudbreak.client.CloudbreakClient;
 import com.sequenceiq.it.IntegrationTestContext;
 import com.sequenceiq.it.SuiteContext;
 import com.sequenceiq.it.config.IntegrationTestConfiguration;
@@ -24,6 +22,7 @@ import com.sequenceiq.it.config.IntegrationTestConfiguration;
 public abstract class AbstractCloudbreakIntegrationTest extends AbstractTestNGSpringContextTests {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCloudbreakIntegrationTest.class);
     private IntegrationTestContext itContext;
+    private CloudbreakClient client;
 
     @Autowired
     private SuiteContext suiteContext;
@@ -31,8 +30,8 @@ public abstract class AbstractCloudbreakIntegrationTest extends AbstractTestNGSp
     @BeforeClass
     public void checkContextParameters(ITestContext testContext) throws Exception {
         itContext = suiteContext.getItContext(testContext.getSuite().getName());
-        Assert.assertNotNull(itContext.getContextParam(IntegrationTestContext.AUTH_TOKEN), "Access token cannot be null.");
-        Assert.assertNotNull(itContext.getContextParam(CloudbreakITContextConstants.CLOUDBREAK_SERVER), "Cloudbreak server endpoint must be given!");
+        client = itContext.getContextParam(CloudbreakITContextConstants.CLOUDBREAK_CLIENT, CloudbreakClient.class);
+        Assert.assertNotNull(client, "CloudbreakClient cannot be null.");
     }
 
     @AfterMethod
@@ -48,11 +47,11 @@ public abstract class AbstractCloudbreakIntegrationTest extends AbstractTestNGSp
         }
     }
 
-    protected void checkResponse(Response entityCreationResponse, HttpStatus httpStatus, ContentType contentType) {
-        entityCreationResponse.then().statusCode(httpStatus.value()).contentType(contentType);
-    }
-
     protected IntegrationTestContext getItContext() {
         return itContext;
+    }
+
+    protected CloudbreakClient getClient() {
+        return client;
     }
 }

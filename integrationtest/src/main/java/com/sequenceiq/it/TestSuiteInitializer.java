@@ -3,7 +3,6 @@ package com.sequenceiq.it;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.util.StringUtils;
@@ -13,8 +12,6 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.response.Response;
 import com.sequenceiq.it.config.IntegrationTestConfiguration;
 import com.sequenceiq.it.util.RestUtil;
 
@@ -55,16 +52,14 @@ public class TestSuiteInitializer extends AbstractTestNGSpringContextTests {
     @BeforeSuite(dependsOnMethods = "initSuiteMap", groups = "suiteInit")
     @Parameters({ "uaaServer", "uaaUser", "uaaPassword" })
     public void initTestSuite(@Optional("") String uaaServer, @Optional("") String uaaUser, @Optional("") String uaaPassword) throws Exception {
-        if (StringUtils.hasLength(keystore)) {
+/*        if (StringUtils.hasLength(keystore)) {
             RestAssured.keystore(keystore, keystorePassword);
-        }
+        }*/
         uaaServer = getString(uaaServer, defaultUaaServer);
         uaaUser = getString(uaaUser, defaultUaaUser);
         uaaPassword = getString(uaaPassword, defaultUaaPassword);
 
-        Response response = RestUtil.createAuthorizationRequest(uaaServer, uaaUser, uaaPassword).log().all().post("/oauth/authorize");
-        response.then().statusCode(HttpStatus.FOUND.value());
-        String accessToken = RestUtil.getAccessToken(response);
+        String accessToken = RestUtil.getToken(uaaServer, uaaUser, uaaPassword);
         Assert.assertNotNull(accessToken, "Access token cannot be null.");
         itContext.putContextParam(IntegrationTestContext.AUTH_TOKEN, accessToken);
     }

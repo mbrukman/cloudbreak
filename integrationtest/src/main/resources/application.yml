@@ -3,7 +3,7 @@ spring:
         checkTemplateLocation: false
 
 integrationtest:
-    gcpCredentialName: it-gcp-credential
-    azureCredentialName: itazurecredential
-    awsCredentialName: it-aws-credential
-    openstackCredentialName: it-openstack-credential
+    credentialNames:
+        GCP: it-gcp-credential
+        AWS: it-aws-credential
+        AZURE: itazurecredential
