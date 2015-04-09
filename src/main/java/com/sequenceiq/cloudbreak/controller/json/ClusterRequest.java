@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-
 public class ClusterRequest {
 
     @Size(max = 40, min = 5, message = "The length of the cluster's name has to be in range of 5 to 40")
@@ -24,6 +23,9 @@ public class ClusterRequest {
     private Set<HostGroupJson> hostGroups;
     private Boolean emailNeeded = Boolean.FALSE;
     private Boolean enableSecurity = Boolean.FALSE;
+    private String kerberosMasterKey;
+    private String kerberosAdmin;
+    private String kerberosPassword;
 
     public String getDescription() {
         return description;
@@ -71,5 +73,29 @@ public class ClusterRequest {
 
     public void setEnableSecurity(Boolean enableSecurity) {
         this.enableSecurity = enableSecurity;
+    }
+
+    public String getKerberosMasterKey() {
+        return kerberosMasterKey;
+    }
+
+    public void setKerberosMasterKey(String kerberosMasterKey) {
+        this.kerberosMasterKey = kerberosMasterKey;
+    }
+
+    public String getKerberosAdmin() {
+        return kerberosAdmin;
+    }
+
+    public void setKerberosAdmin(String kerberosAdmin) {
+        this.kerberosAdmin = kerberosAdmin;
+    }
+
+    public String getKerberosPassword() {
+        return kerberosPassword;
+    }
+
+    public void setKerberosPassword(String kerberosPassword) {
+        this.kerberosPassword = kerberosPassword;
     }
 }
