@@ -32,9 +32,9 @@ public class CloudbreakTestSuiteInitializer extends AbstractTestNGSpringContextT
     private static final int WITH_TYPE_LENGTH = 4;
     private static final Logger LOG = LoggerFactory.getLogger(CloudbreakTestSuiteInitializer.class);
 
-    @Value("${integrationtest.cloudbreak.server:}")
+    @Value("${integrationtest.cloudbreak.server}")
     private String defaultCloudbreakServer;
-    @Value("${integrationtest.cleanup.retrycount:3}")
+    @Value("${integrationtest.cleanup.retryCount}")
     private int cleanUpRetryCount;
 
     @Autowired

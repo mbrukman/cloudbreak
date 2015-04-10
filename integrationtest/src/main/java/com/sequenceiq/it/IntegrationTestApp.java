@@ -20,7 +20,7 @@ import com.sequenceiq.it.cloudbreak.config.ITProps;
 @SpringBootApplication
 @EnableConfigurationProperties(ITProps.class)
 public class IntegrationTestApp implements CommandLineRunner {
-    @Value("${integrationtest.testsuite.threadpool.size:3}")
+    @Value("${integrationtest.testsuite.threadPoolSize}")
     private int suiteThreadPoolSize;
 
     @Autowired

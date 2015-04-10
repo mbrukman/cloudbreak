@@ -3,6 +3,25 @@ spring:
         checkTemplateLocation: false
 
 integrationtest:
+    # uaa properties
+    uaa:
+        server:
+        user:
+        password:
+
+    # cloudbreak properites
+    cloudbreak:
+        server:
+
+    # keystore properties
+    keystore:
+        file:
+        password:
+
+    cleanup:
+        retryCount: 3
+    testsuite:
+        threadPoolSize: 3
     credentialNames:
         GCP: it-gcp-credential
         AWS: it-aws-credential

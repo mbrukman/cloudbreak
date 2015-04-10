@@ -17,23 +17,20 @@ import com.sequenceiq.it.util.RestUtil;
 
 @ContextConfiguration(classes = IntegrationTestConfiguration.class, initializers = ConfigFileApplicationContextInitializer.class)
 public class TestSuiteInitializer extends AbstractTestNGSpringContextTests {
-    @Value("${integrationtest.uaa.server:}")
+    @Value("${integrationtest.uaa.server}")
     private String defaultUaaServer;
 
-    @Value("${integrationtest.uaa.user:}")
+    @Value("${integrationtest.uaa.user}")
     private String defaultUaaUser;
 
-    @Value("${integrationtest.uaa.password:}")
+    @Value("${integrationtest.uaa.password}")
     private String defaultUaaPassword;
 
-    @Value("${integrationtest.keystore:}")
+    @Value("${integrationtest.keystore.file}")
     private String keystore;
 
-    @Value("${integrationtest.keystore.password:}")
+    @Value("${integrationtest.keystore.password}")
     private String keystorePassword;
-
-    @Value("${integrationtest.gcpCredentialName:}")
-    private String gcpCredentialName;
 
     @Autowired
     private SuiteContext suiteContext;
