@@ -13,7 +13,7 @@ tests:
 
   - name: create gateway template
     parameters: {
-      awsTemplateName: it-aws-smoke-gateway,
+      awsTemplateName: it-aws-smoke-gateway-ssud,
       awsInstanceType: M3Medium,
       awsVolumeType: Standard,
       awsVolumeCount: 1,
@@ -25,7 +25,7 @@ tests:
 
   - name: create master template
     parameters: {
-      awsTemplateName: it-aws-smoke-master,
+      awsTemplateName: it-aws-smoke-master-ssud,
       awsInstanceType: C3Large,
       awsVolumeType: Ephemeral,
       awsVolumeCount: 2,
@@ -37,7 +37,7 @@ tests:
 
   - name: create slave template
     parameters: {
-      awsTemplateName: it-aws-smoke-slave,
+      awsTemplateName: it-aws-smoke-slave-ssud,
       awsInstanceType: R3Large,
       awsVolumeType: Gp2,
       awsVolumeCount: 3,
@@ -49,9 +49,9 @@ tests:
 
   - name: create cluster
     parameters: {
-      stackName: it-aws-stack,
+      stackName: it-aws-stack-ssud,
       region: EU_WEST_1,
-      clusterName: it-aws-cluster
+      clusterName: it-aws-cluster-ssud
     }
     classes:
       - com.sequenceiq.it.cloudbreak.StackCreationTest

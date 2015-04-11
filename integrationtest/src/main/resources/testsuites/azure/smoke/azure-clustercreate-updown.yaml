@@ -3,7 +3,6 @@ name: Azure smoke test
 parameters: {
   cloudProvider: AZURE,
   blueprintName: multi-node-hdfs-yarn,
-  sleepTime: 60000
 }
 
 tests:
@@ -14,7 +13,7 @@ tests:
 
   - name: create gateway template
     parameters: {
-      azureTemplateName: it-azure-smoke-gateway,
+      azureTemplateName: it-azure-smoke-gateway-ud,
       azureVmType: A5,
       azureVolumeCount: 1,
       azureVolumeSize: 50,
@@ -25,7 +24,7 @@ tests:
 
   - name: create master template
     parameters: {
-      azureTemplateName: it-azure-smoke-master,
+      azureTemplateName: it-azure-smoke-master-ud,
       azureVmType: STANDARD_D4,
       azureVolumeCount: 2,
       azureVolumeSize: 100,
@@ -36,7 +35,7 @@ tests:
 
   - name: create slave template
     parameters: {
-      azureTemplateName: it-azure-smoke-slave,
+      azureTemplateName: it-azure-smoke-slave-ud,
       azureVmType: STANDARD_D11,
       azureVolumeCount: 3,
       azureVolumeSize: 200,
@@ -47,9 +46,10 @@ tests:
 
   - name: create cluster
     parameters: {
-      stackName: it-azure-stack,
+      stackName: it-azure-stack-ud,
       region: WEST_EUROPE,
-      clusterName: it-azure-cluster
+      clusterName: it-azure-cluster-ud,
+      sleepTime: 60000
     }
     classes:
       - com.sequenceiq.it.cloudbreak.StackCreationTest
@@ -58,7 +58,8 @@ tests:
   - name: upscale
     parameters: {
       instanceGroup: slave_1,
-      scalingAdjustment: 3
+      scalingAdjustment: 3,
+      sleepTime: 60000
     }
     classes:
       - com.sequenceiq.it.cloudbreak.ScalingTest
@@ -66,7 +67,8 @@ tests:
   - name: downscale
     parameters: {
       instanceGroup: slave_1,
-      scalingAdjustment: -2
+      scalingAdjustment: -2,
+      sleepTime: 60000
     }
     classes:
       - com.sequenceiq.it.cloudbreak.ScalingTest

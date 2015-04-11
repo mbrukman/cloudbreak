@@ -9,6 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ITProps {
     private Map<String, String> credentialNames;
     private Map<String, List<String>> testSuites;
+    private List<String> testTypes;
+    private List<String> suiteFiles;
 
     public void setCredentialNames(Map<String, String> credentialNames) {
         this.credentialNames = credentialNames;
@@ -32,5 +34,21 @@ public class ITProps {
 
     public List<String> getTestSuites(String suitesKey) {
         return testSuites.get(suitesKey);
+    }
+
+    public List<String> getTestTypes() {
+        return testTypes;
+    }
+
+    public void setTestTypes(List<String> testTypes) {
+        this.testTypes = testTypes;
+    }
+
+    public List<String> getSuiteFiles() {
+        return suiteFiles;
+    }
+
+    public void setSuiteFiles(List<String> suiteFiles) {
+        this.suiteFiles = suiteFiles;
     }
 }

@@ -3,7 +3,6 @@ name: Azure smoke test
 parameters: {
   cloudProvider: AZURE,
   blueprintName: multi-node-hdfs-yarn,
-  sleepTime: 60000
 }
 
 tests:
@@ -50,6 +49,7 @@ tests:
       stackName: it-azure-stack,
       region: WEST_EUROPE,
       clusterName: it-azure-cluster
+      sleepTime: 60000
     }
     classes:
       - com.sequenceiq.it.cloudbreak.StackCreationTest
