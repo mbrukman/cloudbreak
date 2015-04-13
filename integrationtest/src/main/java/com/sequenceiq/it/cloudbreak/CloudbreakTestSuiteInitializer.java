@@ -36,6 +36,8 @@ public class CloudbreakTestSuiteInitializer extends AbstractTestNGSpringContextT
     private String defaultCloudbreakServer;
     @Value("${integrationtest.cleanup.retryCount}")
     private int cleanUpRetryCount;
+    @Value("${integrationtest.defaultBlueprintName}")
+    private String defaultBlueprintName;
 
     @Autowired
     private ITProps itProps;
@@ -77,6 +79,9 @@ public class CloudbreakTestSuiteInitializer extends AbstractTestNGSpringContextT
 
     private void putBlueprintToContextIfExist(CloudbreakClient client, String blueprintName) {
         try {
+            if (StringUtils.isEmpty(blueprintName)) {
+                blueprintName = defaultBlueprintName;
+            }
             if (StringUtils.hasLength(blueprintName)) {
                 String resourceId = getId(client.getBlueprintByName(blueprintName));
                 if (resourceId != null) {

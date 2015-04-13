@@ -1,8 +1,7 @@
 # AZURE credential name must be specified
 name: AWS smoke test
 parameters: {
-  cloudProvider: AWS,
-  blueprintName: multi-node-hdfs-yarn
+  cloudProvider: AWS
 }
 
 tests:

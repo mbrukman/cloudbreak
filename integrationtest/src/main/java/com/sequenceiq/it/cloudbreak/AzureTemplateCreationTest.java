@@ -23,7 +23,7 @@ public class AzureTemplateCreationTest extends AbstractCloudbreakIntegrationTest
 
     @Test
     @Parameters({ "azureTemplateName", "azureVmType", "azureVolumeCount", "azureVolumeSize" })
-    public void testAwsTemplateCreation(@Optional("it-azure-template") String azureTemplateName, @Optional("MEDIUM") String azureVmType,
+    public void testAzureTemplateCreation(@Optional("it-azure-template") String azureTemplateName, @Optional("MEDIUM") String azureVmType,
             @Optional("1") String azureVolumeCount, @Optional("10") String azureVolumeSize) throws Exception {
         // GIVEN
         // WHEN

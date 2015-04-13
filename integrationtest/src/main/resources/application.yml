@@ -20,6 +20,8 @@ integrationtest:
 
     cleanup:
         retryCount: 3
+
+    defaultBlueprintName: multi-node-hdfs-yarn
     testsuite:
         threadPoolSize: 3
     credentialNames:

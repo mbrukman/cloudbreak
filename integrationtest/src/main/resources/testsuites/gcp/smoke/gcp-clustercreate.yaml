@@ -1,8 +1,7 @@
 # GCP credential name must be specified
 name: Gcp smoke test
 parameters: {
-  cloudProvider: GCP,
-  blueprintName: multi-node-hdfs-yarn
+  cloudProvider: GCP
 }
 
 tests:
