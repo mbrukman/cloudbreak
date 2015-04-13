@@ -74,14 +74,14 @@ public class CloudbreakUtil {
     public static void checkClusterAvailability(CloudbreakClient client, String stackId) throws Exception {
         Map<String, Object> stack = (Map<String, Object>) client.getStack(stackId);
 
-        Assert.assertEquals("AVAILABLE", ((Map<String, Object>) stack.get("cluster")).get("status"), "The cluster hasn't been started!");
-        Assert.assertEquals("AVAILABLE", stack.get("status"), "The stack hasn't been started!");
+        Assert.assertEquals(((Map<String, Object>) stack.get("cluster")).get("status"), "AVAILABLE", "The cluster hasn't been started!");
+        Assert.assertEquals(stack.get("status"), "AVAILABLE", "The stack hasn't been started!");
 
         String ambariIp = (String) stack.get("ambariServerIp");
         Assert.assertNotNull(ambariIp, "The Ambari IP is not available!");
 
         AmbariClient ambariClient = new AmbariClient(ambariIp);
-        Assert.assertEquals("RUNNING", ambariClient.healthCheck(), "The Ambari server is not running!");
+        Assert.assertEquals(ambariClient.healthCheck(), "RUNNING", "The Ambari server is not running!");
         Assert.assertEquals(ambariClient.getClusterHosts().size(), getNodeCount(stack) - 1,
                 "The number of cluster nodes in the stack differs from the number of nodes registered in ambari");
     }
@@ -89,8 +89,8 @@ public class CloudbreakUtil {
     public static void checkClusterStopped(CloudbreakClient client, String stackId) throws Exception {
         Map<String, Object> stack = (Map<String, Object>) client.getStack(stackId);
 
-        Assert.assertEquals("STOPPED", ((Map<String, Object>) stack.get("cluster")).get("status"), "The cluster is not stopped!");
-        Assert.assertEquals("STOPPED", stack.get("status"), "The stack is not stopped!");
+        Assert.assertEquals(((Map<String, Object>) stack.get("cluster")).get("status"), "STOPPED", "The cluster is not stopped!");
+        Assert.assertEquals(stack.get("status"), "STOPPED", "The stack is not stopped!");
 
         String ambariIp = (String) stack.get("ambariServerIp");
         AmbariClient ambariClient = new AmbariClient(ambariIp);
