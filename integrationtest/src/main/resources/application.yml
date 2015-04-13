@@ -76,3 +76,4 @@ integrationtest:
         - classpath:/testsuites/aws/smoke/aws-clustercreate-updown.yaml
         AZURE_UPDOWN_SMOKE_TEST:
         - classpath:/testsuites/azure/smoke/azure-clustercreate-updown.yaml
+
