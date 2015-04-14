@@ -74,6 +74,8 @@ public class IntegrationTestApp implements CommandLineRunner {
         case "fulltest":
             if (fullTestRegionIndex > -1 && fullTestRegionNumber > 0) {
                 setupFullTest(testng, fullTestRegionIndex, fullTestRegionNumber);
+            } else {
+                LOG.info("fulltest command require integrationtest.fulltest.regindex and integrationtest.fulltest.regnum parameters!");
             }
             break;
         case "suites":
@@ -93,6 +95,7 @@ public class IntegrationTestApp implements CommandLineRunner {
         suites.addAll(getProviderSuites("classpath:/testsuites/aws/full/*.yaml", salt, regionNum));
         suites.addAll(getProviderSuites("classpath:/testsuites/azure/full/*.yaml", salt, regionNum));
         suites.addAll(getProviderSuites("classpath:/testsuites/gcp/full/*.yaml", salt, regionNum));
+        LOG.info("The following suites will be executed: {}", suites);
         testng.setXmlSuites(loadSuiteResources(suites));
     }
 
