@@ -12,7 +12,7 @@ tests:
 
   - name: create gateway template
     parameters: {
-      azureTemplateName: it-azure-smoke-gateway-ssud,
+      azureTemplateName: it-azure-full-gateway9,
       azureVmType: A5,
       azureVolumeCount: 1,
       azureVolumeSize: 50,
@@ -23,7 +23,7 @@ tests:
 
   - name: create master template
     parameters: {
-      azureTemplateName: it-azure-smoke-master-ssud,
+      azureTemplateName: it-azure-full-master9,
       azureVmType: STANDARD_D4,
       azureVolumeCount: 2,
       azureVolumeSize: 100,
@@ -34,7 +34,7 @@ tests:
 
   - name: create slave template
     parameters: {
-      azureTemplateName: it-azure-smoke-slave-ssud,
+      azureTemplateName: it-azure-full-slave9,
       azureVmType: STANDARD_D11,
       azureVolumeCount: 3,
       azureVolumeSize: 200,
@@ -45,9 +45,9 @@ tests:
 
   - name: create cluster
     parameters: {
-      stackName: it-azure-stack-ssud,
+      stackName: it-azure-stack9,
       region: NORTH_EUROPE,
-      clusterName: it-azure-cluster-ssud,
+      clusterName: it-azure-cluster9,
       sleepTime: 60000
     }
     classes:
